@@ -7,10 +7,9 @@
 
 import argparse
 from cyvcf2 import VCF
-import scipy.stats as stats
 from scipy.stats import chisquare
-import sys
-import math
+import re
+
 
 class MyVCFFilter(object):
     def __init__(self,vcf_file):
@@ -134,6 +133,10 @@ class MyVCFFilter(object):
         else:
             return chisquare(f_obs=[gt_list.count(0) + (gt_list.count(1) / 2),
                                     gt_list.count(3) + (gt_list.count(1) / 2)])
+
+    def dump_header(self):
+        for line in self.__header_lines:
+            print(line)
 
     def dump_filtered_vars(self):
         #need to figure out how to print the header
@@ -272,6 +275,7 @@ if __name__ == "__main__":
     #maybe add an option to test for different segregation types?
     #add an option to filter on missingness
     parser.add_argument("--number_of_SNPs_per_scaffold",type=int,help="number of SNPs")
-    parser.add_argument("--SNP_choose_method",type=str,help="method to choose SNPs per scaffold, one of \'missing\', \'max_freq\',\'min_freq\', default is first on the scaffold")
+    parser.add_argument("--SNP_choose_method",default="missing", type=str,help="method to choose SNPs per scaffold, one of \'missing\', \'max_freq\',\'min_freq\', default is first on the scaffold")
+
     args = parser.parse_args()
     main(args)

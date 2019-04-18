@@ -5,7 +5,7 @@ import argparse
 import sys
 
 def main(args):
-    exact_vcf = vcf_exact_intersect(args.a,args.b)
+    exact_vcf = vcf_exact_intersect(args.source,args.positions)
     sys.stderr.write(exact_vcf.get_filenames() + "\n")
     exact_vcf.get_exact_intersection()
     exact_vcf.print_result()
@@ -30,12 +30,12 @@ class vcf_exact_intersect(object):
         a_vcf_map = self.__make_VCF_map(VCF(self.__a_vcf_file))
         b_vcf_map = self.__make_VCF_map(VCF(self.__b_vcf_file))
 
-        sys.stderr.write("this many in \"a\" file: " + str(len(a_vcf_map.keys())) + "\n")
-        sys.stderr.write("this many in \"b\" file: " + str(len(b_vcf_map.keys())) + "\n")
+        sys.stderr.write("this many in \"source\" file: " + str(len(a_vcf_map.keys())) + "\n")
+        sys.stderr.write("this many in \"positions\" file: " + str(len(b_vcf_map.keys())) + "\n")
 
-        for a_position in a_vcf_map.iterkeys():
-            if b_vcf_map.has_key(a_position):
-                self.__intersection_results.append(a_vcf_map[a_position])
+        for b_position in b_vcf_mapvcf_map.iterkeys():
+            if a_vcf_map.has_key(b_position):
+                self.__intersection_results.append(a_vcf_map[b_position])
 
         sys.stderr.write("this many in the intersection: " + str(len(self.__intersection_results)))
 
@@ -56,7 +56,7 @@ class vcf_exact_intersect(object):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--a",type=str,help="")
-    parser.add_argument("--b",type=str,help="")
+    parser.add_argument("--source",type=str,help="vcf_file to filter")
+    parser.add_argument("--positions",type=str,help="vcf file with the positions you want to get in the other file")
     args = parser.parse_args()
     main(args)
