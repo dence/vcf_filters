@@ -16,7 +16,6 @@ class MyVCFFilter(object):
         self.__my_vcf_file = vcf_file
         self.__my_filtered_variants = []
         self.__expected_freqs = []
-        self.__haplo_dipl = False
         #sys.stderr.write("checking expected freqs in constructor\n")
         #sys.stderr.write(str(self.__expected_freqs))
         #sys.stderr.write("\n")
@@ -145,14 +144,7 @@ class MyVCFFilter(object):
         #sys.stderr.write(str(len(self.__my_filtered_variants)))
         #sys.stderr.write("\n")
         for var in self.__my_filtered_variants:
-
-            if(self.__haplo_dipl == True):
-                gtlist = var.genotypes
-                gtlist = [2 if x == 3 else x for x in gtlist]
-                var.genotypes = gtlist
-
-            else:
-                print(str(var).strip())
+            print(str(var).strip())
 
     def filter_missing(self,missing_max=0.2):
         if(len(self.__my_filtered_variants) == 0):
@@ -240,51 +232,45 @@ class MyVCFFilter(object):
                 missing_count = missing_count + 1
         return float(missing_count) / float(len(gt_list))
 
-    def set_haplo_diplo_filter(self):
-        self.__haplo_dipl = True
-
-    def haplo_diplo_missing(self):
+    def haplo_diplo_filter(self):
         vcf = VCF(self.__my_vcf_file)
         for variant in vcf:
             #list comprehension. Neato!
-            tmp_variant = variant
-            tmp_variant.gt_types = [2 if x==1 else x for x in variant.gt_types]
-            self.__my_filtered_variants.append(tmp_variant)
+            tmp_gt_types = [2 if x==1 else x for x in variant.gt_types]
+            variant.gt_types = tmp_gt_types
+            self.__my_filtered_variants.append(variant)
 
 def main(args):
     filter_obj = MyVCFFilter(args.vcf_file)
     #first filter on missing data
     if(args.haplo_diplo_missing):
-        filter_obj.set_haplo_diplo_filter()
-        filter_obj.dump_filtered_vars()
+        filter_obj.haplo_diplo_filter()
 
-    else:
-        if(args.filter_missing==True):
-            if(args.missing_max):
-                filter_obj.filter_missing(args.missing_max)
-            else:
-                filter_obj.filter_missing()
+    if(args.filter_missing==True):
+        if(args.missing_max):
+            filter_obj.filter_missing(args.missing_max)
+        else:
+            filter_obj.filter_missing()
 
-        #then filter on segregation
-        if(args.filter_chi==True):
+    #then filter on segregation
+    if(args.filter_chi==True):
+        if(args.expected_freqs):
+            filter_obj.set_expected_freqs(args.expected_freqs)
 
-            if(args.expected_freqs):
-                filter_obj.set_expected_freqs(args.expected_freqs)
+        if(args.chi_square_alpha):
+                filter_obj.filter_segregant(args.chi_square_alpha)
+        else:
+            filter_obj.filter_segregant()
 
-            if(args.chi_square_alpha):
-                    filter_obj.filter_segregant(args.chi_square_alpha)
-            else:
-                filter_obj.filter_segregant()
+    if(args.number_of_SNPs_per_scaffold):
+        if(args.SNP_choose_method):
+            filter_obj.filter_SNPs_per_scaffold(args.number_of_SNPs_per_scaffold,args.SNP_choose_method)
+        else:
+            filter_obj.filter_SNPs_per_scaffold(args.number_of_SNPs_per_scaffold)
 
-        if(args.number_of_SNPs_per_scaffold):
-            if(args.SNP_choose_method):
-                filter_obj.filter_SNPs_per_scaffold(args.number_of_SNPs_per_scaffold,args.SNP_choose_method)
-            else:
-                filter_obj.filter_SNPs_per_scaffold(args.number_of_SNPs_per_scaffold)
-
-        #need to figure out how to dump the header info
-        #dump filtered vcf
-        filter_obj.dump_filtered_vars()
+    #need to figure out how to dump the header info
+    #dump filtered vcf
+    filter_obj.dump_filtered_vars()
 
 
 if __name__ == "__main__":
