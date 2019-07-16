@@ -8,7 +8,7 @@
 import argparse
 from cyvcf2 import VCF
 from scipy.stats import chisquare
-import array from numpy as np.array
+import numpy as np
 
 class MyVCFFilter(object):
     def __init__(self,vcf_file):
