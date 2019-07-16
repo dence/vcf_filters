@@ -246,7 +246,6 @@ def main(args):
     if(args.haplo_diplo_missing):
         filter_obj.set_haplo_diplo_filter
         filter_obj.dump_filtered_vars()
-        break
 
     else:
         if(args.filter_missing==True):
