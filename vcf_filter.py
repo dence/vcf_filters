@@ -232,10 +232,20 @@ class MyVCFFilter(object):
                 missing_count = missing_count + 1
         return float(missing_count) / float(len(gt_list))
 
+    def haplo_diplo_missing(self):
+        vcf = VCF(self.__my_vcf_file)
+        for variant in vcf:
+            #list comprehension. Neato!
+            variant.gt_types = [2 if x==1 else x for x in variant.gt_types]
+            self.__my_filtered_variants.append(variant)
 
 def main(args):
     filter_obj = MyVCFFilter(args.vcf_file)
     #first filter on missing data
+    if(args.haplo_diplo_missing):
+        filter_obj.haplo_diplo_missing()
+
+
     if(args.filter_missing==True):
         if(args.missing_max):
             filter_obj.filter_missing(args.missing_max)
@@ -267,6 +277,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--vcf_file",type=str,help="vcf file that we're going to filter")
+    parser.add_argument("--haplo_diplo_missing",help="tells the script this is a ")
     parser.add_argument("--filter_missing",help="tells the script to filter on missing data",action='store_true')
     parser.add_argument("--missing_max",type=float,help="maximum percentage of missing data")
     parser.add_argument("--filter_chi",help="tells the script to filter with a chisquare test for proper segregation",action='store_true')
