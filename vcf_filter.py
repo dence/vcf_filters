@@ -237,7 +237,7 @@ class MyVCFFilter(object):
 
         for variant in vcf:
             #list comprehension. Neato!
-            print >> sys.stderr, str(variant.genotypes)
+            sys.stderr.write(str(variant.genotypes))
             #tmp_genotypes = np.array([2 if x==1 else x for x in variant.genotypes])
             tmp_genotypes = [2 if x==1 else x for x in variant.genotypes]
             variant.genotypes = tmp_genotypes
