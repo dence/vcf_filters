@@ -236,13 +236,15 @@ class MyVCFFilter(object):
         vcf = VCF(self.__my_vcf_file)
         for variant in vcf:
             #list comprehension. Neato!
-            variant.gt_types = [2 if x==1 else x for x in variant.gt_types]
-            self.__my_filtered_variants.append(variant)
+            tmp_variant = variant
+            tmp_variant.gt_types = [2 if x==1 else x for x in variant.gt_types]
+            self.__my_filtered_variants.append(tmp_variant)
 
 def main(args):
     filter_obj = MyVCFFilter(args.vcf_file)
     #first filter on missing data
     if(args.haplo_diplo_missing):
+        #filter_obj.set_haplo_diplo_filter
         filter_obj.haplo_diplo_missing()
 
 
