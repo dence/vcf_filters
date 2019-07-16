@@ -8,8 +8,7 @@
 import argparse
 from cyvcf2 import VCF
 from scipy.stats import chisquare
-import re
-
+import array from numpy as np.array
 
 class MyVCFFilter(object):
     def __init__(self,vcf_file):
@@ -234,8 +233,11 @@ class MyVCFFilter(object):
 
     def haplo_diplo_filter(self):
         vcf = VCF(self.__my_vcf_file)
+
         for variant in vcf:
             #list comprehension. Neato!
+            print(variant.genotypes)
+            #tmp_genotypes = np.array([2 if x==1 else x for x in variant.genotypes])
             tmp_genotypes = [2 if x==1 else x for x in variant.genotypes]
             variant.genotypes = tmp_genotypes
             self.__my_filtered_variants.append(variant)
