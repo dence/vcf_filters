@@ -248,7 +248,7 @@ class MyVCFFilter(object):
             # list comprehension. Neato!
             #tmp_genotypes = np.array([2 if x==1 else x for x in variant.genotypes])
             #tmp_genotypes = [-1 if x==1 else x for x in variant.genotypes]
-            variant.genotypes = np.array(new_genotypes
+            variant.genotypes = np.array(new_genotypes)
             self.__my_filtered_variants.append(variant)
 
 def main(args):
