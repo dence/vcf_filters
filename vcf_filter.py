@@ -236,11 +236,19 @@ class MyVCFFilter(object):
         vcf = VCF(self.__my_vcf_file)
 
         for variant in vcf:
-            #list comprehension. Neato!
-            sys.stderr.write(str(variant.genotypes))
+
+            new_genotypes = np.array()
+            for gt in variant.genotypes:
+                if(len(gt) == 1):
+                    new_genotypes.append(gt)
+                else:
+                    if(gt[0] == gt[1]):
+                        new_gt = np.array([-1,False])
+                        new_genotypes.append(new_gt)
+            # list comprehension. Neato!
             #tmp_genotypes = np.array([2 if x==1 else x for x in variant.genotypes])
-            tmp_genotypes = [2 if x==1 else x for x in variant.genotypes]
-            variant.genotypes = tmp_genotypes
+            #tmp_genotypes = [-1 if x==1 else x for x in variant.genotypes]
+            variant.genotypes = new_genotypes
             self.__my_filtered_variants.append(variant)
 
 def main(args):
