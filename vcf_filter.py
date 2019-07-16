@@ -277,7 +277,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--vcf_file",type=str,help="vcf file that we're going to filter")
-    parser.add_argument("--haplo_diplo_missing",help="tells the script this is a ")
+    parser.add_argument("--haplo_diplo_missing",help="tells the script this is haploid called as diploid file. change hets to missing",action='store_true')
     parser.add_argument("--filter_missing",help="tells the script to filter on missing data",action='store_true')
     parser.add_argument("--missing_max",type=float,help="maximum percentage of missing data")
     parser.add_argument("--filter_chi",help="tells the script to filter with a chisquare test for proper segregation",action='store_true')
