@@ -244,36 +244,37 @@ def main(args):
     filter_obj = MyVCFFilter(args.vcf_file)
     #first filter on missing data
     if(args.haplo_diplo_missing):
-        #filter_obj.set_haplo_diplo_filter
-        filter_obj.haplo_diplo_missing()
+        filter_obj.set_haplo_diplo_filter
+        filter_obj.dump_filtered_vars()
+        break
 
+    else:
+        if(args.filter_missing==True):
+            if(args.missing_max):
+                filter_obj.filter_missing(args.missing_max)
+            else:
+                filter_obj.filter_missing()
 
-    if(args.filter_missing==True):
-        if(args.missing_max):
-            filter_obj.filter_missing(args.missing_max)
-        else:
-            filter_obj.filter_missing()
+        #then filter on segregation
+        if(args.filter_chi==True):
 
-    #then filter on segregation
-    if(args.filter_chi==True):
+            if(args.expected_freqs):
+                filter_obj.set_expected_freqs(args.expected_freqs)
 
-        if(args.expected_freqs):
-            filter_obj.set_expected_freqs(args.expected_freqs)
+            if(args.chi_square_alpha):
+                    filter_obj.filter_segregant(args.chi_square_alpha)
+            else:
+                filter_obj.filter_segregant()
 
-        if(args.chi_square_alpha):
-                filter_obj.filter_segregant(args.chi_square_alpha)
-        else:
-            filter_obj.filter_segregant()
+        if(args.number_of_SNPs_per_scaffold):
+            if(args.SNP_choose_method):
+                filter_obj.filter_SNPs_per_scaffold(args.number_of_SNPs_per_scaffold,args.SNP_choose_method)
+            else:
+                filter_obj.filter_SNPs_per_scaffold(args.number_of_SNPs_per_scaffold)
 
-    if(args.number_of_SNPs_per_scaffold):
-        if(args.SNP_choose_method):
-            filter_obj.filter_SNPs_per_scaffold(args.number_of_SNPs_per_scaffold,args.SNP_choose_method)
-        else:
-            filter_obj.filter_SNPs_per_scaffold(args.number_of_SNPs_per_scaffold)
-
-    #need to figure out how to dump the header info
-    #dump filtered vcf
-    filter_obj.dump_filtered_vars()
+        #need to figure out how to dump the header info
+        #dump filtered vcf
+        filter_obj.dump_filtered_vars()
 
 
 if __name__ == "__main__":
