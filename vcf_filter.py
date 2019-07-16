@@ -238,7 +238,7 @@ class MyVCFFilter(object):
         for variant in vcf:
 
             new_genotypes = []
-            print variant.genotypes.size
+            print(variant.genotypes.size)
             for gt in variant.genotypes:
                 if(len(gt) == 1):
                     new_genotypes.append(gt)
