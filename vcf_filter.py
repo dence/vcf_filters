@@ -240,6 +240,7 @@ class MyVCFFilter(object):
             new_genotypes = []
             print(len(variant.genotypes))
             for gt in variant.genotypes:
+                print gt
                 if(len(gt) == 1):
                     new_genotypes.append(gt)
                 else:
