@@ -238,11 +238,9 @@ class MyVCFFilter(object):
         for variant in vcf:
 
             new_genotypes = []
-            print(len(variant.genotypes))
+
             for gt in variant.genotypes:
-                print(gt)
-                print(len(gt))
-                if(len(gt) == 1):
+                if(len(gt) == 2):
                     new_genotypes.append(gt)
                 else:
                     if(gt[0] == gt[1]):
@@ -251,7 +249,6 @@ class MyVCFFilter(object):
             # list comprehension. Neato!
             #tmp_genotypes = np.array([2 if x==1 else x for x in variant.genotypes])
             #tmp_genotypes = [-1 if x==1 else x for x in variant.genotypes]
-            print(len(new_genotypes))
             variant.genotypes = np.array(new_genotypes)
             self.__my_filtered_variants.append(variant)
 
