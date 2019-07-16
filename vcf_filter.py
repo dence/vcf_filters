@@ -236,8 +236,8 @@ class MyVCFFilter(object):
         vcf = VCF(self.__my_vcf_file)
         for variant in vcf:
             #list comprehension. Neato!
-            tmp_gt_types = [2 if x==1 else x for x in variant.gt_types]
-            variant.gt_types = tmp_gt_types
+            tmp_genotypes = [2 if x==1 else x for x in variant.genotypes]
+            variant.genotypes = tmp_genotypes
             self.__my_filtered_variants.append(variant)
 
 def main(args):
