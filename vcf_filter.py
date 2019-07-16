@@ -1,4 +1,4 @@
-#!/Users/danielence/anaconda/bin/python
+#!/usr/bin/python
 #Daniel Ence
 #
 

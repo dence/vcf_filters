@@ -1,4 +1,4 @@
-#!/Users/danielence/anaconda/bin/python
+#!/usr/bin/python
 #Daniel Ence January 23, 2019
 from cyvcf2 import VCF
 import argparse
