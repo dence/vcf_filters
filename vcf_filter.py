@@ -246,6 +246,8 @@ class MyVCFFilter(object):
                     if(gt[0] == gt[1]):
                         new_gt = np.array([-1,False])
                         new_genotypes.append(new_gt)
+            print(len(new_genotypes))
+            print(len(variant.genotypes))
             # list comprehension. Neato!
             #tmp_genotypes = np.array([2 if x==1 else x for x in variant.genotypes])
             #tmp_genotypes = [-1 if x==1 else x for x in variant.genotypes]
