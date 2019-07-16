@@ -9,6 +9,7 @@ import argparse
 from cyvcf2 import VCF
 from scipy.stats import chisquare
 import numpy as np
+import sys
 
 class MyVCFFilter(object):
     def __init__(self,vcf_file):
@@ -236,7 +237,7 @@ class MyVCFFilter(object):
 
         for variant in vcf:
             #list comprehension. Neato!
-            print(variant.genotypes)
+            print >> sys.stderr, str(variant.genotypes)
             #tmp_genotypes = np.array([2 if x==1 else x for x in variant.genotypes])
             tmp_genotypes = [2 if x==1 else x for x in variant.genotypes]
             variant.genotypes = tmp_genotypes
