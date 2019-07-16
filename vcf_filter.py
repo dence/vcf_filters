@@ -16,6 +16,7 @@ class MyVCFFilter(object):
         self.__my_vcf_file = vcf_file
         self.__my_filtered_variants = []
         self.__expected_freqs = []
+        self.__haplo_dipl = False
         #sys.stderr.write("checking expected freqs in constructor\n")
         #sys.stderr.write(str(self.__expected_freqs))
         #sys.stderr.write("\n")
@@ -144,7 +145,14 @@ class MyVCFFilter(object):
         #sys.stderr.write(str(len(self.__my_filtered_variants)))
         #sys.stderr.write("\n")
         for var in self.__my_filtered_variants:
-            print(str(var).strip())
+
+            if(self.__haplo_dipl == True):
+                gtlist = var.genotypes
+                gtlist = [2 if x == 3 else x for x in gtlist]
+                var.genotypes = gtlist
+
+            else:
+                print(str(var).strip())
 
     def filter_missing(self,missing_max=0.2):
         if(len(self.__my_filtered_variants) == 0):
@@ -232,6 +240,9 @@ class MyVCFFilter(object):
                 missing_count = missing_count + 1
         return float(missing_count) / float(len(gt_list))
 
+    def set_haplo_diplo_filter(self):
+        self.__haplo_dipl = True
+
     def haplo_diplo_missing(self):
         vcf = VCF(self.__my_vcf_file)
         for variant in vcf:
@@ -244,7 +255,7 @@ def main(args):
     filter_obj = MyVCFFilter(args.vcf_file)
     #first filter on missing data
     if(args.haplo_diplo_missing):
-        filter_obj.set_haplo_diplo_filter
+        filter_obj.set_haplo_diplo_filter()
         filter_obj.dump_filtered_vars()
 
     else:
